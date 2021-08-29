@@ -19,7 +19,7 @@ static char	g_processName[128];
 
 bool	LoadConfig() {
 
-	std::ifstream configFile( "settings.cfg" );
+	std::ifstream configFile( "C:/Program Files/NFSVC/settings.cfg" );
 	char buffer[128];
 
 	if( !configFile.is_open() )
@@ -110,26 +110,27 @@ bool	TerminateRestrictedProcesses() {
 	return true;
 }
 
-int main() {
+//int main() {
 
-	//	Load process name and max count from config
-	if( !LoadConfig() ) {
-		std::cout << "Error: LoadConfig returned false" << std::endl;
-		return 1;
-	}
+//	//	Load process name and max count from config
+//	if( !LoadConfig() ) {
+//		std::cout << "Error: LoadConfig returned false" << std::endl;
+//		return 1;
+//	}
 
-	//	Service loop
-	while( true ) {
+//	//	Service loop
+//	while( true ) {
 
-		std::this_thread::sleep_for( std::chrono::seconds(1) );
+//		std::this_thread::sleep_for( std::chrono::seconds(1) );
 
-		if( !TerminateRestrictedProcesses() ) {
-			std::cout << "Error: TerminateRestrictedProcesses returned false" << std::endl;
-			continue;
-		}
+//		if( !TerminateRestrictedProcesses() ) {
+//			std::cout << "Error: TerminateRestrictedProcesses returned false" << std::endl;
+//			continue;
+//		}
 
-	}
+//	}
 
-	//	never will be shutdown
-	return 1;
-}
+//	//	never will be shutdown
+//	return 1;
+//}
+

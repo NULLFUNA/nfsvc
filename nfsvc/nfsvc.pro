@@ -3,7 +3,10 @@ TEMPLATE = app
 #CONFIG -= app_bundle
 #CONFIG -= qt
 
-LIBS += -luser32
-
+LIBS += -luser32 -lpsapi
+DEFINES += PSAPI_VERSION=1
 SOURCES += \
-        main.cpp
+        controlling.cpp \
+        service.cpp
+
+DESTDIR = ../setup/data

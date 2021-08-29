@@ -12,7 +12,14 @@ TARGET = Setup
 INSTALLS += target
 
 SOURCES += \
-	SetupMain.cpp
+	installer.cpp \
+	main.cpp
 
 DISTFILES += info.rc
 RC_FILE = info.rc
+
+RESOURCES += \
+	data.qrc
+
+HEADERS += \
+	global.hpp
