@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/files">
-        <file>data/libgcc_s_seh-1.dll</file>
-        <file>data/libstdc++-6.dll</file>
-        <file>data/libwinpthread-1.dll</file>
-        <file>data/nfsvc.exe</file>
-    </qresource>
-</RCC>

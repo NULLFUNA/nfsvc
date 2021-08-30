@@ -22,16 +22,16 @@ BEGIN
 	BLOCK "040904b0"
 
 	BEGIN
-	    VALUE "CompanyName", "nullFuna\0"
-	    VALUE "FileDescription", "NFSVC Setup\0"
+			VALUE "CompanyName", "nullFuna\0"
+			VALUE "FileDescription", "Controlling Restricted Processes (NFSVC)\0"
 	    VALUE "FileVersion", "1.0.0.0\0"
-	    VALUE "InternalName", "Setup\0"
-	    VALUE "LegalCopyright", "Copyright 2021 nullFuna\0"
-	    VALUE "OriginalFilename", "Setup.exe\0"
-	    VALUE "ProductName", "NFSVC Setup\0"
+			VALUE "InternalName", "nullFuna Service\0"
+			VALUE "LegalCopyright", "Copyright (C) 2021 nullFuna\0"
+			VALUE "OriginalFilename", "nfsvc.exe\0"
+			VALUE "ProductName", "Controlling Restricted Processes (NFSVC)\0"
 	    VALUE "ProductVersion", "1.0.0.0\0"
 	END
     END
 END
 
-IDI_ICON1               ICON    "data/Setup.ico"
+IDI_ICON1               ICON    "Setup.ico"

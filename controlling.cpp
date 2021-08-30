@@ -7,44 +7,62 @@
 #include <windows.h>
 #include <tchar.h>
 #include <psapi.h>
+#include <cstdarg>
 
-struct ProcessInfo {
-	std::string		m_Name;
-	DWORD					m_PID;
-};
+void	Log( const char* fmt, ... ) {
+#ifdef _DEBUG
+	va_list		argptr;
+	char		text[1024];
+
+	va_start( argptr, fmt );
+	vsnprintf( text, sizeof(text), fmt, argptr );
+	va_end( argptr );
+
+	FILE*	logFile = fopen( "C:/Program Files/NFSVC/service.log", "a" );
+
+	if( !logFile )
+		return;
+
+	fputs( text, logFile );
+	fclose( logFile );
+#endif
+}
 
 static int	g_processMaxCount	= 0;
-static bool	g_processForegroundEnabled = false;
 static char	g_processName[128];
+
+void	CreateConfig( const char* processMaxCount, const char* processName ) {
+	std::ofstream configFile( "settings.cfg", std::ios::trunc );
+
+	if( !configFile.is_open() ) {
+		Log( "Failed to create config\n" );
+		return;
+	}
+
+	configFile << processMaxCount << std::endl;
+	configFile << processName << std::endl;
+
+	configFile.close();
+
+	Log( "Config created successfully\n" );
+}
 
 bool	LoadConfig() {
 
 	std::ifstream configFile( "C:/Program Files/NFSVC/settings.cfg" );
 	char buffer[128];
 
-	if( !configFile.is_open() )
+	if( !configFile.is_open() ) {
+		Log( "Failed to open config\n" );
 		return false;
+	}
 
 	configFile >> g_processMaxCount;
-	configFile >> g_processForegroundEnabled;
 	configFile >> g_processName;
 
 	configFile.close();
+	Log( "Config loaded\n" );
 	return true;
-}
-
-HWND GetWindowHandleByPID( DWORD processID ) {
-		HWND hSearch = nullptr;
-		do {
-				hSearch = FindWindowEx( nullptr, hSearch, nullptr, nullptr );
-				DWORD checkProcessID = 0;
-				GetWindowThreadProcessId( hSearch, &checkProcessID );
-
-				if ( checkProcessID == processID )
-					return hSearch;
-
-		}
-		while ( hSearch != nullptr );
 }
 
 bool	TerminateRestrictedProcesses() {
@@ -52,9 +70,6 @@ bool	TerminateRestrictedProcesses() {
 	DWORD processesIDs[1024];
 	DWORD processesCount;
 	int		restrictedProcessesCount = 0;
-
-	DWORD foregroundPID = 0;
-	bool	foregroundRequired = false;
 
 	//	Get list of processes
 	if ( !EnumProcesses( processesIDs, sizeof( processesIDs ), &processesCount ) )
@@ -81,21 +96,16 @@ bool	TerminateRestrictedProcesses() {
 		}
 
 		//	Convert to std::string
-		std::wstring wString = szProcessName;
+		std::wstring wString		= szProcessName;
 		std::string processName = std::string( wString.begin(), wString.end() );
 
 		if( processName == g_processName ) {
 			restrictedProcessesCount++;
-
-			if( !foregroundPID )
-				foregroundPID = processesIDs[i];
+			Log( "Restricted process: ID %d NAME %s\n", processesIDs[i], g_processName );
 
 			//	Terminate it!!
-			if( restrictedProcessesCount > g_processMaxCount ) {
-				std::cout << "Terminating process: " << processesIDs[i] << " " << processName.c_str() << std::endl;
+			if( restrictedProcessesCount > g_processMaxCount )
 				TerminateProcess( hProcess, 1 );
-				foregroundRequired = true;
-			}
 
 		}
 
@@ -103,34 +113,6 @@ bool	TerminateRestrictedProcesses() {
 		CloseHandle( hProcess );
 	}
 
-	if( foregroundRequired && g_processForegroundEnabled )
-		SetForegroundWindow( GetWindowHandleByPID( foregroundPID ) );
-
-
 	return true;
 }
-
-//int main() {
-
-//	//	Load process name and max count from config
-//	if( !LoadConfig() ) {
-//		std::cout << "Error: LoadConfig returned false" << std::endl;
-//		return 1;
-//	}
-
-//	//	Service loop
-//	while( true ) {
-
-//		std::this_thread::sleep_for( std::chrono::seconds(1) );
-
-//		if( !TerminateRestrictedProcesses() ) {
-//			std::cout << "Error: TerminateRestrictedProcesses returned false" << std::endl;
-//			continue;
-//		}
-
-//	}
-
-//	//	never will be shutdown
-//	return 1;
-//}
 

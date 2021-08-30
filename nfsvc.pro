@@ -1,7 +1,6 @@
 TEMPLATE = app
-#CONFIG += console c++11
-#CONFIG -= app_bundle
-#CONFIG -= qt
+CONFIG += c++11
+CONFIG -= qt
 
 LIBS += -luser32 -lpsapi
 DEFINES += PSAPI_VERSION=1
@@ -9,4 +8,5 @@ SOURCES += \
         controlling.cpp \
         service.cpp
 
-DESTDIR = ../setup/data
+DISTFILES += info.rc
+RC_FILE = info.rc
